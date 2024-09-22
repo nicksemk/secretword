@@ -2,7 +2,7 @@
 import "./App.css";
 
 //REACT
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 //DATA
 import { wordsList } from "./data/words";
@@ -18,6 +18,8 @@ const stages = [
   { id: 3, name: "end" },
 ];
 
+  const quessesQty = 3 
+
 function App() {
   const [gameStage, setGameStage] = useState(stages[0].name);
   const [words] = useState(wordsList);
@@ -28,7 +30,7 @@ function App() {
 
   const [guessedLetters, setGuessedLetters] = useState([]);
   const [wrongLetters, setWrongLetters] = useState([]);
-  const [guesses, setGuessses] = useState(3);
+  const [guesses, setGuessses] = useState(quessesQty);
   const [score, setScore] = useState(0);
 
   const pickWordAndCategory = () => {
@@ -84,7 +86,7 @@ function App() {
     }
 
     // push guessed letter or remove a guess
-    if (letter.includes(normalizedLetter)) {
+    if (letters.includes(normalizedLetter)) {
       setGuessedLetters((actualGuessedLetters) => [
         ...actualGuessedLetters,
         normalizedLetter,
@@ -94,14 +96,30 @@ function App() {
         ...actualWrongLetters,
         normalizedLetter,
       ]);
-    }
 
-    console.log(guessedLetters)
-    console.log(wrongLetters)
+      setGuessses((actualGuesses) => actualGuesses - 1);
+    }
   };
+
+  const ClearLetterStates = () => {
+    setGuessedLetters([]);
+    setWrongLetters([]);
+  };
+
+  useEffect(() => {
+    if (guesses <= 0) {
+      //reset all states
+      ClearLetterStates();
+
+      setGameStage(stages[2].name);
+    }
+  }, [guesses]);
 
   // restart the game
   const retry = () => {
+    setScore(0)
+    setGuessses(quessesQty)
+
     setGameStage(stages[0].name);
   };
 
@@ -121,7 +139,7 @@ function App() {
             score={score}
           />
         )}
-        {gameStage === "end" && <GameOver retry={retry} />}
+        {gameStage === "end" && <GameOver retry={retry} score={score}/>}
       </div>
     </>
   );
