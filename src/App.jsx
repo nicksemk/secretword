@@ -113,11 +113,15 @@ function App() {
     //win condition
     if (guessedLetters.length === uniqueLetters.length && gameStage === stages[1].name) {
       setScore((actualScore) => actualScore + 100);
+      setGuesses(guessesQty)
 
       //restart game with new word
-      startGame();
+      setTimeout(() => {
+        startGame();
+      }, 1000); 
     }
-  }, [guessedLetters, letters, startGame]);
+  }, [guessedLetters, letters, gameStage, startGame]);
+    
 
   // restart the game
   const retry = () => {
