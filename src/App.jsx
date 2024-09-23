@@ -111,7 +111,7 @@ function App() {
     const uniqueLetters = [...new Set(letters)];
 
     //win condition
-    if (guessedLetters.length === uniqueLetters.length) {
+    if (guessedLetters.length === uniqueLetters.length && gameStage === stages[1].name) {
       setScore((actualScore) => actualScore + 100);
 
       //restart game with new word
